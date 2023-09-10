@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block title %} Predictor {% endblock title %}
+
+{% block head %}    
+    <style>
+        #form_container {
+            padding: 0rem 0.75rem;
+        }
+
+        .row {
+            margin: 1rem 0rem;
+        }
+
+        #submit_button {
+            margin-top: 1.5rem;
+        }
+
+        .text-center {
+            margin: 1rem 0rem;
+        }
+
+        hr {
+            margin-bottom: 0rem;
+        }
+
+        #cpu_frequency {
+            padding-top: 0.5rem;
+            padding-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function preventBack() {
+            window.history.forward(); 
+        }
+          
+        setTimeout("preventBack()", 0);
+          
+        window.onunload = function () { null };
+
+        function validate_form() {
+            var Company = document.myform.Company.value;
+            var TypeName = document.myform.TypeName.value;
+            var CPU_BRAND = document.myform.CPU_Brand.value;
+            var OpSys = document.myform.OpSys.value;
+            var RAM = document.myform.RAM.value;
+            var CPU_Frequency = document.myform.CPU_Frequency.value;
+            var GPU = document.myform.GPU.value;
+            var Memory_SSD = document.myform.Memory_SSD.value;
+
+            if(Company == "Choose") {
+                alert("Choose Company");
+                return false;
+            }
+            else if(TypeName == "Choose") {
+                alert("Choose Product Type");
+                return false;
+            }
+            else if(CPU_BRAND == "Choose") {
+                alert("Choose CPU");
+                return false;
+            }
+            else if(OpSys == "Choose") {
+                alert("Choose Operating System");
+                return false;
+            }
+            else if(RAM == "Choose") {
+                alert("Choose RAM");
+                return false;
+            }
+            else if(CPU_Frequency < 0.9) {
+                alert("\"CPU Clock Speed\" should be above 0.9");
+                return false;
+            }else if(CPU_Frequency > 3.6) {
+                alert("\"CPU Clock Speed\" should be below 3.6");
+                return false;
+            }else if(GPU == "Choose") {
+                alert("Choose GPU");
+                return false;
+            }
+
+            if(Company == "Apple" && (OpSys != "Mac_OS" && OpSys != "Mac OS X")) {
+                alert("Company \"Apple\" supports only \"Mac\" type of operating systems");
+                return false;
+            }else if(Company == "Microsoft" && (OpSys != "Windows_10" && OpSys != "Other_Windows_OS")) {
+                alert("Company \"Microsoft\" supports only \"Windows\" type of operating systems");
+                return false;
+            }else if(Company != "Apple" && (OpSys == "Mac_OS" || OpSys == "Mac OS X")) {
+                alert("Selected Company does not support \"Mac\" type of operating systems");
+                return false;
+            }
+        }
+    </script>
+{% endblock head %}
+
+{% block body %}
+
+<h2 class="text-center">
+    Predict the price of your Laptop
+</h2>
+
+<div class="container">
+<form name="myform" action="/result/" method="post" id="form_container" onsubmit="return validate_form()">
+{% csrf_token %}
+
+    <div class="row">
+        <div class="col-md-6">
+            
+            <label for="Company" class="form-label">Company</label>
+            <select required id="Company" class="form-select" name="Company">
+                <option selected value="Choose">Choose...</option>
+                <option value="Dell">Dell</option>
+                <option value="Lenovo">Lenovo</option>
+                <option value="HP">HP</option>
+                <option value="Asus">Asus</option>
+                <option value="Acer">Acer</option>
+                <option value="MSI">MSI</option>
+                <option value="Toshiba">Toshiba</option>
+                <option value="Apple">Apple</option>
+                <option value="Samsung">Samsung</option>
+                <option value="Razer">Razer</option>
+                <option value="Mediacom">Mediacom</option>
+                <option value="Microsoft">Microsoft</option>
+                <option value="Xiaomi">Xiaomi</option>
+                <option value="Vero">Vero</option>
+                <option value="Chuwi">Chuwi</option>
+                <option value="Google">Google</option>
+                <option value="Fujitsu">Fujitsu</option>
+                <option value="LG">LG</option>
+                <option value="Huawei">Huawei</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="TypeName" class="form-label">Product Type</label>
+            <select required id="TypeName" class="form-select" name="TypeName">
+                <option selected value="Choose">Choose...</option>
+                <option value="Notebook">Notebook</option>
+                <option value="Gaming">Gaming</option>
+                <option value="Ultrabook">Ultrabook</option>
+                <option value="2 in 1 Convertible">Two in one Convertible</option>
+                <option value="Workstation">Workstation</option>
+                <option value="Netbook">Netbook</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <label for="CPU_Brand" class="form-label">CPU</label>
+            <select required id="CPU_Brand" class="form-select" name="CPU_Brand">
+                <option selected value="Choose">Choose...</option>
+                <option value="Intel Core i7">Intel Core i7</option>
+                <option value="Intel Core i5">Intel Core i5</option>
+                <option value="Intel Core i3">Intel Core i3</option>
+                <option value="Other Intel Processor">Other Intel Processor</option>
+                <option value="AMD Processor">AMD Processor</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="OpSys" class="form-label">Operating System</label>
+            <select required id="OpSys" class="form-select" name="OpSys">
+                <option selected value="Choose">Choose...</option>
+                <option value="Windows_10">Windows 10</option>
+                <option value="Linux/No_OS/Other_OS">Linux</option>
+                <option value="Mac_OS">Mac OS</option>
+                <option value="Mac OS X">Mac OS X</option>
+                <option value="Other_Windows_OS">Other Windows OS</option>
+                <option value="Linux/No_OS/Other_OS">Other OS</option>
+                <option value="Linux/No_OS/Other_OS">None</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="RAM" class="form-label">RAM</label>
+            <select required id="RAM" class="form-select" name="RAM">
+                <option selected value="Choose">Choose...</option>
+                <option value=64>64 GB</option>
+                <option value=32>32 GB</option>
+                <option value=24>24 GB</option>
+                <option value=16>16 GB</option>
+                <option value=12>12 GB</option>
+                <option value=8>8 GB</option>
+                <option value=6>6 GB</option>
+                <option value=4>4 GB</option>
+                <option value=2>2 GB</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3" id="cpu_frequency">
+            <label for="CPU_Frequency" class="form-label">CPU Clock Speed (in GHz)   </label>
+            <input required type="number" class="form-number" step=0.1 value=1.5 id="CPU_Frequency" name="CPU_Frequency">
+        </div>
+        <div class="col-md-5">
+            <label for="GPU" class="form-label">GPU</label>
+            <select required id="GPU" class="form-select" name="GPU">
+                <option selected value="Choose">Choose...</option>
+                <option value="AMD">AMD</option>
+                <option value="Nvidia">Nvidia</option>
+                <option value="Intel">Intel</option>
+            </select>
+
+        </div>
+        <div class="col-md-4">
+            <label for="Memory_SSD" class="form-label">SSD Size</label>
+            <select required id="Memory_SSD" class="form-select" name="Memory_SSD">
+                <option value="0" selected>None</option>
+                <option value=1024>1 TB</option>
+                <option value=768>768 GB</option>
+                <option value=512>512 GB</option>
+                <option value=256>256 GB</option>
+                <option value=240>240 GB</option>
+                <option value=180>180 GB</option>
+                <option value=128>128 GB</option>
+                <option value=64>64 GB</option>
+                <option value=32>32 GB</option>
+                <option value=16>16 GB</option>
+                <option value=8>8 GB</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row" id="submit_button">
+        <div class="d-grid gap-5 col-2 mx-auto">
+            <button class="btn btn-outline-primary" type="submit" value="submit"> Predict </button>
+        </div>
+    </div>
+</form>
+</div>
+
+{% endblock body %}

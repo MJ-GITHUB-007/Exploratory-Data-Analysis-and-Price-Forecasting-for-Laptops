@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %} Predictor {% endblock title %}
+
+{% block head %}
+    <style>
+        body {
+            color: white;
+            background: url(https://cdn.pixabay.com/photo/2016/03/26/13/09/cup-of-coffee-1280537_1280.jpg) center center fixed no-repeat;
+            background-size: cover;
+        }
+
+        #result_container {
+            padding: 12rem 0rem;
+        }
+
+        #goback {
+            margin: 3rem 0rem;
+        }
+    </style>
+{% endblock head %}
+
+{% block body %}
+<div class="container" id="result_container">
+    <h1 class="text-center">Laptop Price is</h1>
+    <h1 class="text-center">$ {{predicted_price}}</h1>
+
+    <div class="row">
+        <div class="d-grid gap-5 col-2 mx-auto">
+            <a class="btn btn-dark btn-lg" id="goback" href="/predictor" role="button"> Predict Another Price </a>
+        </div>
+    </div>
+</div>
+{% endblock body %}
